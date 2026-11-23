@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Asistente científico</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Cormorant+Garamond:wght@600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --night: #091426;
+      --gold: #d8b45a;
+      --cyan: #72d7d0;
+      --ink: #172238;
+      --muted: #747d8d;
+      --line: #e4e7eb;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      min-height: 520px;
+      color: var(--ink);
+      background: #f9fafb;
+      font-family: "DM Sans", sans-serif;
+    }
+
+    button, textarea { font: inherit; }
+
+    .chat {
+      display: grid;
+      grid-template-rows: 68px minmax(0, 1fr) auto;
+      height: 520px;
+    }
+
+    .chat-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 22px;
+      border-bottom: 1px solid var(--line);
+      background: white;
+    }
+
+    .chat-title {
+      display: flex;
+      align-items: center;
+      gap: 11px;
+    }
+
+    .atom {
+      position: relative;
+      width: 34px;
+      height: 34px;
+      border: 1px solid var(--gold);
+      border-radius: 50%;
+    }
+
+    .atom::before,
+    .atom::after {
+      content: "";
+      position: absolute;
+      inset: 7px -4px;
+      border: 1px solid var(--cyan);
+      border-radius: 50%;
+    }
+
+    .atom::after { transform: rotate(60deg); }
+
+    .chat-title h1 {
+      margin: 0 0 2px;
+      font-family: "Cormorant Garamond", serif;
+      font-size: 20px;
+    }
+
+    .chat-title p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 11px;
+    }
+
+    .status {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      color: #5e6674;
+      font-size: 11px;
+    }
+
+    .status-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: #55b89a;
+    }
+
+    .conversation {
+      overflow-y: auto;
+      padding: 22px;
+      scroll-behavior: smooth;
+    }
+
+    .welcome {
+      display: flex;
+      height: 100%;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+    }
+
+    .welcome h2 {
+      margin: 12px 0 6px;
+      font-family: "Cormorant Garamond", serif;
+      font-size: 31px;
+    }
+
+    .welcome p {
+      max-width: 430px;
+      margin: 0 0 18px;
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.5;
+    }
+
+    .suggestions {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+      width: min(680px, 100%);
+    }
+
+    .suggestion {
+      min-height: 66px;
+      padding: 10px 12px;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      background: white;
+      color: var(--ink);
+      font-size: 12px;
+      font-weight: 700;
+      text-align: left;
+    }
+
+    .suggestion:hover {
+      border-color: #bfcfd1;
+      background: #fbfdfd;
+    }
+
+    .suggestion span {
+      display: block;
+      margin-bottom: 5px;
+      color: #9a7a31;
+      font-size: 16px;
+    }
+
+    .message-row {
+      display: flex;
+      margin-bottom: 12px;
+    }
+
+    .message-row.user { justify-content: flex-end; }
+    .message-row.assistant { justify-content: flex-start; }
+
+    .message {
+      max-width: 78%;
+      padding: 10px 13px;
+      border-radius: 13px;
+      font-size: 13px;
+      line-height: 1.55;
+      white-space: pre-wrap;
+    }
+
+    .user .message {
+      border-bottom-right-radius: 4px;
+      background: var(--night);
+      color: white;
+    }
+
+    .assistant .message {
+      border: 1px solid var(--line);
+      border-bottom-left-radius: 4px;
+      background: white;
+    }
+
+    .typing {
+      display: flex;
+      gap: 4px;
+      align-items: center;
+      min-width: 48px;
+    }
+
+    .typing span {
+      width: 5px;
+      height: 5px;
+      border-radius: 50%;
+      background: var(--muted);
+      animation: bounce 900ms infinite ease-in-out;
+    }
+
+    .typing span:nth-child(2) { animation-delay: 100ms; }
+    .typing span:nth-child(3) { animation-delay: 200ms; }
+
+    @keyframes bounce {
+      0%, 60%, 100% { transform: translateY(0); }
+      30% { transform: translateY(-4px); }
+    }
+
+    .composer-wrap {
+      padding: 8px 16px 10px;
+      background: white;
+    }
+
+    .composer {
+      display: grid;
+      grid-template-columns: 1fr 38px;
+      align-items: end;
+      min-height: 52px;
+      padding: 7px;
+      border: 1px solid #dfe3e7;
+      border-radius: 12px;
+      background: white;
+      box-shadow: 0 5px 18px rgba(7, 17, 31, 0.06);
+    }
+
+    .composer:focus-within {
+      border-color: #a9c7c5;
+      box-shadow: 0 5px 18px rgba(114, 215, 208, 0.12);
+    }
+
+    textarea {
+      width: 100%;
+      height: 36px;
+      max-height: 90px;
+      resize: none;
+      border: 0;
+      outline: 0;
+      color: var(--ink);
+      background: transparent;
+      line-height: 36px;
+    }
+
+    textarea::placeholder { color: #a0a5ae; }
+
+    .send {
+      display: grid;
+      width: 38px;
+      height: 38px;
+      place-items: center;
+      border: 0;
+      border-radius: 9px;
+      background: var(--night);
+      color: white;
+    }
+
+    .send svg {
+      width: 17px;
+      fill: none;
+      stroke: currentColor;
+      stroke-width: 2;
+    }
+
+    @media (max-width: 600px) {
+      .status { display: none; }
+      .chat-header { padding: 0 14px; }
+      .conversation { padding: 14px; }
+      .suggestions { grid-template-columns: 1fr; }
+      .suggestion { min-height: 48px; }
+      .welcome { justify-content: flex-start; padding-top: 12px; }
+      .welcome h2 { font-size: 25px; }
+    }
+  </style>
+</head>
+<body>
+  <main class="chat">
+    <header class="chat-header">
+      <div class="chat-title">
+        <span class="atom" aria-hidden="true"></span>
+        <div>
+          <h1>Asistente científico</h1>
+          <p>Explorador de ideas del cuento</p>
+        </div>
+      </div>
+      <div class="status"><span class="status-dot"></span> Disponible</div>
+    </header>
+
+    <section class="conversation" id="conversation" aria-live="polite">
+      <div class="welcome" id="welcome">
+        <h2>¿Qué quieres descubrir?</h2>
+        <p>Haz preguntas sobre el cuento, conceptos científicos o ideas que te hayan llamado la atención.</p>
+        <div class="suggestions">
+          <button class="suggestion" type="button" data-prompt="Explica qué es un ecosistema invisible">
+            <span>◎</span>Explorar el ecosistema
+          </button>
+          <button class="suggestion" type="button" data-prompt="Explícame qué significa observar científicamente">
+            <span>◉</span>Entender la observación
+          </button>
+          <button class="suggestion" type="button" data-prompt="¿Cómo comienza una pregunta científica?">
+            <span>✦</span>Formular una pregunta
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <div class="composer-wrap">
+      <form class="composer" id="chatForm">
+        <textarea id="messageInput" rows="1" placeholder="Pregunta algo sobre ciencia..." aria-label="Mensaje al asistente"></textarea>
+        <button class="send" type="submit" aria-label="Enviar mensaje">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 19V5M6 11l6-6 6 6"/></svg>
+        </button>
+      </form>
+    </div>
+  </main>
+
+  <script src="script.js"></script>
+</body>
+</html>

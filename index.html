@@ -1,0 +1,541 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cuento Científico - INFOMATRIX</title>
+  <meta name="description" content="Sitio personal del cuento científico e historia inspirada en la ciencia.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600;700&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --night: #07111f;
+      --night-soft: #0d1b2d;
+      --gold: #d8b45a;
+      --gold-bright: #f1d58a;
+      --cyan: #72d7d0;
+      --paper: #f5f1e8;
+      --ink: #162238;
+      --muted: #697386;
+      --line: rgba(216, 180, 90, 0.22);
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      margin: 0;
+      min-width: 320px;
+      color: var(--ink);
+      background: #fbfaf7;
+      font-family: "DM Sans", sans-serif;
+    }
+
+    button, textarea { font: inherit; }
+    button { cursor: pointer; }
+
+    .hero {
+      position: relative;
+      min-height: 330px;
+      overflow: hidden;
+      color: white;
+      background:
+        radial-gradient(circle at 78% 35%, rgba(114, 215, 208, 0.13), transparent 25%),
+        radial-gradient(circle at 16% 120%, rgba(216, 180, 90, 0.18), transparent 35%),
+        linear-gradient(135deg, #07111f 0%, #0a1830 58%, #102744 100%);
+    }
+
+    .hero::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      opacity: 0.16;
+      background-image:
+        linear-gradient(rgba(114, 215, 208, 0.18) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(114, 215, 208, 0.18) 1px, transparent 1px);
+      background-size: 38px 38px;
+      mask-image: linear-gradient(to bottom, black, transparent 86%);
+    }
+
+    .topbar {
+      position: relative;
+      z-index: 2;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      max-width: 1180px;
+      height: 82px;
+      margin: 0 auto;
+      padding: 0 28px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .brand-symbol {
+      position: relative;
+      width: 38px;
+      height: 38px;
+      border: 1px solid var(--gold);
+      border-radius: 50%;
+    }
+
+    .brand-symbol::before,
+    .brand-symbol::after {
+      content: "";
+      position: absolute;
+      border: 1px solid var(--gold-bright);
+      border-radius: 50%;
+    }
+
+    .brand-symbol::before { inset: 7px -5px; transform: rotate(32deg); }
+    .brand-symbol::after { inset: -5px 7px; transform: rotate(-32deg); }
+
+    .brand-name {
+      display: flex;
+      flex-direction: column;
+      line-height: 1.05;
+    }
+
+    .brand-name strong {
+      font-family: "Cormorant Garamond", serif;
+      font-size: 20px;
+      letter-spacing: 0.03em;
+    }
+
+    .brand-name small {
+      margin-top: 5px;
+      color: var(--gold-bright);
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.24em;
+    }
+
+    .edition {
+      color: rgba(255, 255, 255, 0.66);
+      font-size: 12px;
+      letter-spacing: 0.08em;
+    }
+
+    .hero-content {
+      position: relative;
+      z-index: 1;
+      max-width: 1180px;
+      margin: 0 auto;
+      padding: 44px 28px 72px;
+    }
+
+    .hero-kicker {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 14px;
+      color: var(--gold-bright);
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.17em;
+      text-transform: uppercase;
+    }
+
+    .hero-kicker::before {
+      content: "";
+      width: 34px;
+      height: 1px;
+      background: var(--gold);
+    }
+
+    .hero h1 {
+      max-width: 720px;
+      margin: 0;
+      font-family: "Cormorant Garamond", serif;
+      font-size: clamp(48px, 7vw, 82px);
+      line-height: 0.92;
+      letter-spacing: -0.04em;
+    }
+
+    .hero h1 em {
+      color: var(--gold-bright);
+      font-style: italic;
+    }
+
+    .tabs {
+      position: relative;
+      z-index: 4;
+      max-width: 1180px;
+      height: 62px;
+      margin: -31px auto 0;
+      padding: 0 28px;
+    }
+
+    .tab-list {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      height: 62px;
+      overflow: hidden;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: rgba(255, 255, 255, 0.96);
+      box-shadow: 0 14px 35px rgba(7, 17, 31, 0.12);
+    }
+
+    .tab-button {
+      position: relative;
+      border: 0;
+      border-right: 1px solid #ebe7dc;
+      background: transparent;
+      color: #687084;
+      font-size: 14px;
+      font-weight: 700;
+    }
+
+    .tab-button:last-child { border-right: 0; }
+
+    .tab-button.active {
+      color: var(--night);
+      background: #fff;
+    }
+
+    .tab-button.active::after {
+      content: "";
+      position: absolute;
+      right: 18%;
+      bottom: 0;
+      left: 18%;
+      height: 3px;
+      border-radius: 3px 3px 0 0;
+      background: var(--gold);
+    }
+
+    main {
+      max-width: 1180px;
+      margin: 0 auto;
+      padding: 56px 28px 100px;
+    }
+
+    .tab-panel { display: none; }
+    .tab-panel.active { display: block; animation: reveal 350ms ease both; }
+
+    @keyframes reveal {
+      from { opacity: 0; transform: translateY(8px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .panel-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1.25fr) minmax(280px, 0.75fr);
+      gap: 70px;
+      align-items: start;
+    }
+
+    .section-label {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 16px;
+      color: #9a7a31;
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+    }
+
+    .section-label::before {
+      content: "";
+      width: 24px;
+      height: 2px;
+      background: var(--gold);
+    }
+
+    .panel-title {
+      margin: 0 0 22px;
+      font-family: "Cormorant Garamond", serif;
+      font-size: clamp(38px, 5vw, 58px);
+      line-height: 1;
+      letter-spacing: -0.03em;
+    }
+
+    .prose {
+      max-width: 680px;
+      color: #515b6b;
+      font-family: "Cormorant Garamond", serif;
+      font-size: 21px;
+      line-height: 1.75;
+    }
+
+    .prose p { margin: 0 0 18px; }
+
+    .author-card,
+    .quote-card {
+      border: 1px solid #e7e1d4;
+      border-radius: 16px;
+      background: var(--paper);
+    }
+
+    .author-card {
+      padding: 38px;
+    }
+
+    .portrait {
+      display: grid;
+      width: 150px;
+      height: 150px;
+      margin: 0 auto 24px;
+      place-items: center;
+      border: 1px solid rgba(216, 180, 90, 0.6);
+      border-radius: 50%;
+      background:
+        radial-gradient(circle at center, #14294a 0 38%, transparent 39%),
+        radial-gradient(circle at center, #dce7e7 0 54%, transparent 55%);
+      box-shadow: 0 0 0 8px #fbfaf7, 0 0 0 9px rgba(216, 180, 90, 0.28);
+    }
+
+    .portrait span {
+      color: white;
+      font-family: "Cormorant Garamond", serif;
+      font-size: 46px;
+    }
+
+    .author-card h2 {
+      margin: 0 0 8px;
+      text-align: center;
+      font-family: "Cormorant Garamond", serif;
+      font-size: 30px;
+    }
+
+    .author-card .role {
+      margin: 0 0 20px;
+      color: #9a7a31;
+      text-align: center;
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+    }
+
+    .author-card p {
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.65;
+      text-align: center;
+    }
+
+    .story-page {
+      max-width: 820px;
+      margin: 0 auto;
+      padding: 54px 64px;
+      border: 1px solid #e7e1d4;
+      border-radius: 4px;
+      background:
+        linear-gradient(90deg, transparent 96%, rgba(216, 180, 90, 0.08) 96%),
+        #fff;
+      box-shadow: 0 18px 50px rgba(7, 17, 31, 0.08);
+    }
+
+    .story-page .panel-title { text-align: center; }
+    .story-page .section-label { justify-content: center; }
+
+    .dropcap::first-letter {
+      float: left;
+      margin: 12px 10px 0 0;
+      color: #a27d34;
+      font-family: "Cormorant Garamond", serif;
+      font-size: 78px;
+      line-height: 0.62;
+    }
+
+    .quote-card {
+      margin-top: 30px;
+      padding: 28px 32px;
+      border-left: 3px solid var(--gold);
+    }
+
+    .quote-card blockquote {
+      margin: 0;
+      color: var(--ink);
+      font-family: "Cormorant Garamond", serif;
+      font-size: 25px;
+      font-style: italic;
+      line-height: 1.45;
+    }
+
+    .chat-area {
+      margin-top: 80px;
+      padding-top: 44px;
+      border-top: 1px solid #e7e1d4;
+    }
+
+    .chat-heading {
+      display: flex;
+      align-items: end;
+      justify-content: space-between;
+      margin-bottom: 18px;
+    }
+
+    .chat-heading h2 {
+      margin: 0;
+      font-family: "Cormorant Garamond", serif;
+      font-size: 38px;
+    }
+
+    .chat-heading p {
+      margin: 0 0 4px;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .chat-frame {
+      height: 520px;
+      overflow: hidden;
+      border: 1px solid #dcd6c8;
+      border-radius: 14px;
+      background: white;
+      box-shadow: 0 14px 40px rgba(7, 17, 31, 0.08);
+    }
+
+    .chat-frame iframe { width: 100%; height: 100%; border: 0; }
+
+    @media (max-width: 760px) {
+      .edition { display: none; }
+      .hero { min-height: 300px; }
+      .hero-content { padding-top: 32px; }
+      .tabs { height: 68px; margin-top: -34px; padding: 0 12px; }
+      .tab-list { height: 68px; }
+      .tab-button { padding: 6px; font-size: 11px; }
+      main { padding: 40px 16px 70px; }
+      .panel-grid { grid-template-columns: 1fr; gap: 38px; }
+      .story-page { padding: 38px 24px; }
+      .chat-area { margin-top: 56px; }
+      .chat-heading { align-items: start; flex-direction: column; gap: 6px; }
+      .chat-frame { height: 480px; }
+    }
+  </style>
+</head>
+<body>
+  <header class="hero">
+    <nav class="topbar" aria-label="Encabezado">
+      <div class="brand">
+        <span class="brand-symbol" aria-hidden="true"></span>
+        <span class="brand-name">
+          <strong>Cuento Científico</strong>
+          <small>INFOMATRIX</small>
+        </span>
+      </div>
+      <span class="edition">CIENCIA · IMAGINACIÓN · EXCELENCIA</span>
+    </nav>
+    <div class="hero-content">
+      <div class="hero-kicker">Edición científica</div>
+      <h1>Donde nace la <em>curiosidad</em></h1>
+    </div>
+  </header>
+
+  <nav class="tabs" aria-label="Secciones del sitio">
+    <div class="tab-list" role="tablist">
+      <button class="tab-button active" id="tab-author" role="tab" aria-selected="true" aria-controls="panel-author" data-tab="author">About the Author</button>
+      <button class="tab-button" id="tab-tale" role="tab" aria-selected="false" aria-controls="panel-tale" data-tab="tale">Cuento científico</button>
+      <button class="tab-button" id="tab-history" role="tab" aria-selected="false" aria-controls="panel-history" data-tab="history">Mi Historia</button>
+      <button class="tab-button" id="tab-dream" role="tab" aria-selected="false" aria-controls="panel-dream" data-tab="dream">Mi sueño</button>
+    </div>
+  </nav>
+
+  <main>
+    <section class="tab-panel active" id="panel-author" role="tabpanel" aria-labelledby="tab-author" data-panel="author">
+      <div class="panel-grid">
+        <div>
+          <div class="section-label">Sobre el autor</div>
+          <h2 class="panel-title">La ciencia comienza con una pregunta.</h2>
+          <div class="prose">
+            <p>Esta sección presenta al joven autor detrás del cuento, su trayectoria, sus intereses científicos y la inspiración que convirtió la observación en una historia.</p>
+            <p>Desde la curiosidad cotidiana hasta la búsqueda de respuestas, cada experiencia ha contribuido a construir una voz propia: una voz capaz de unir imaginación, conocimiento y esperanza.</p>
+          </div>
+        </div>
+        <aside class="author-card" aria-label="Perfil del autor">
+          <div class="portrait" aria-hidden="true"><span>A</span></div>
+          <h2>Autor/a del cuento</h2>
+          <p class="role">Estudiante · Explorador/a científico/a</p>
+          <p>Un relato nace de la curiosidad, la disciplina y el deseo de comprender el universo que nos rodea.</p>
+        </aside>
+      </div>
+    </section>
+
+    <section class="tab-panel" id="panel-tale" role="tabpanel" aria-labelledby="tab-tale" data-panel="tale">
+      <article class="story-page">
+        <div class="section-label">Relato científico</div>
+        <h2 class="panel-title">El ecosistema invisible</h2>
+        <div class="prose">
+          <p class="dropcap">Había una vez una pequeña luz que viajaba donde nadie podía verla. Recorrió el interior de una gota de agua y descubrió un mundo completo: seres diminutos, corrientes silenciosas y una danza constante de materia y energía.</p>
+          <p>Cada movimiento parecía casual, pero respondía a leyes precisas. Allí comprendió que lo invisible no es menos real, ni menos extraordinario. Solo exige una mirada más paciente.</p>
+          <p>En su camino, la luz aprendió que observar transforma. Cada pregunta abre una puerta; cada experimento permite acercarse un poco más a la verdad.</p>
+        </div>
+        <div class="quote-card">
+          <blockquote>“Lo pequeño también puede contener universos completos.”</blockquote>
+        </div>
+      </article>
+    </section>
+
+    <section class="tab-panel" id="panel-history" role="tabpanel" aria-labelledby="tab-history" data-panel="history">
+      <div class="panel-grid">
+        <div>
+          <div class="section-label">Mi Historia</div>
+          <h2 class="panel-title">Una trayectoria impulsada por preguntas.</h2>
+          <div class="prose">
+            <p>Esta es el espacio para contar el camino personal: los primeros descubrimientos, los retos enfrentados, los proyectos realizados y las personas que hicieron posible alcanzar cada meta.</p>
+            <p>Cada etapa aporta una nueva perspectiva y convierte el aprendizaje en una aventura compartida.</p>
+          </div>
+        </div>
+        <div class="quote-card">
+          <blockquote>“Ningún descubrimiento comienza sin el valor de preguntar por qué.”</blockquote>
+        </div>
+      </div>
+    </section>
+
+    <section class="tab-panel" id="panel-dream" role="tabpanel" aria-labelledby="tab-dream" data-panel="dream">
+      <div class="panel-grid">
+        <div>
+          <div class="section-label">Mi sueño</div>
+          <h2 class="panel-title">Crear soluciones que transformen el futuro.</h2>
+          <div class="prose">
+            <p>Mi sueño es seguir investigando, aprendiendo y colaborando para transformar problemas reales en ideas útiles. Deseo demostrar que la ciencia puede acercar a las personas, proteger el planeta y abrir oportunidades a nuevas generaciones.</p>
+            <p>El futuro no es un destino lejano: se construye hoy, con cada pregunta hecha con rigor y cada respuesta puesta al servicio de todos.</p>
+          </div>
+        </div>
+        <div class="quote-card">
+          <blockquote>“Soñar con el futuro también es una forma de diseñarlo.”</blockquote>
+        </div>
+      </div>
+    </section>
+
+    <section class="chat-area" id="asistente" aria-labelledby="chat-title">
+      <div class="chat-heading">
+        <h2 id="chat-title">Explora el relato con el asistente</h2>
+        <p>Preguntas sobre ciencia, conceptos e ideas del cuento</p>
+      </div>
+      <div class="chat-frame">
+        <iframe src="index_chatbot.html" title="Asistente científico interactivo"></iframe>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    const buttons = document.querySelectorAll(".tab-button");
+    const panels = document.querySelectorAll(".tab-panel");
+
+    buttons.forEach((button) => {
+      button.addEventListener("click", () => {
+        buttons.forEach((item) => {
+          item.classList.remove("active");
+          item.setAttribute("aria-selected", "false");
+        });
+        panels.forEach((panel) => panel.classList.remove("active"));
+
+        button.classList.add("active");
+        button.setAttribute("aria-selected", "true");
+        document.querySelector(`[data-panel="${button.dataset.tab}"]`).classList.add("active");
+      });
+    });
+  </script>
+</body>
+</html>
